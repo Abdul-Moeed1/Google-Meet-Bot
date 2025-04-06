@@ -7,6 +7,7 @@ export const Start = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [urlError, setUrlError] = useState(false);
   const [serverError, setServerError] = useState(false);
+  const [transcript, setTranscript] = useState("");
 
   const handleStart = async (e) => {
     setIsProcessing(true);
@@ -15,9 +16,12 @@ export const Start = () => {
       setServerError(false);
       setUrlError(false);
       setIsSuccess(false);
-      const res = await startMeeting({ url : meetLink });
+      const res = await startMeeting({ url: meetLink });
+      console.log(res.data);
+
       if (res.status == 200) {
         setIsSuccess(true);
+        setTranscript(res.data)
         setIsProcessing(false);
       }
 
@@ -29,7 +33,7 @@ export const Start = () => {
         setServerError(true);
         setIsProcessing(false);
       }
-      else{
+      else {
         setServerError(true);
         setIsProcessing(false);
       }
@@ -60,6 +64,13 @@ export const Start = () => {
           {isProcessing ? "Processing..." : "Start"}
         </button>
       </div>
+      {isSuccess &&
+        (<div className="mt-8 w-full max-w-3xl bg-white shadow-md p-6 rounded-lg">
+          <h3 className="text-xl font-semibold text-green-600 mb-4">Meeting Transcript</h3>
+          <pre className="whitespace-pre-wrap text-gray-800">{transcript}</pre>
+        </div>)
+      }
     </div>
+
   );
 }
